@@ -155,14 +155,19 @@ function badges(){
     if(s.main==='water'||s.main==='lightning'){
       var my=(s.timer==='under')?'fast':(s.timer==='over')?'slow':null;
       if(my){
-        var spread=real?'lightning':'water'; // 찐=번개 산개, 짭=물 산개
-        if(s.main===spread) slot[my].push('산개'+(s.timer==='under'?NUM:BIND));
-        else slot[my].push('쉐어');
+        // ★ 슬롯 기준 찐짭: 1물번개=그크①, 2물번개=그크② (실전 검증 2026-07-04)
+        var slotReal=(my==='fast')?st[1].real:st[2].real;
+        if(slotReal){
+          var spread=(slotReal==='t')?'lightning':'water';
+          if(s.main===spread) slot[my].push('산개'+(s.timer==='under'?NUM:BIND));
+          else slot[my].push('쉐어');
+        }
       }
     }
     if(s.main==='bomb'){
       var bs=anySight?'fast':'slow'; // 마안 있으면 1물번개때, 없으면 2물번개때
-      slot[bs].push(real?'멈춰':'움직여!');
+      var bReal=(bs==='fast')?st[1].real:st[2].real; // ★ 슬롯 기준 찐짭
+      if(bReal) slot[bs].push(bReal==='t'?'멈춰':'움직여!');
     }
   });
   cell(2, slot.fast.length?slot.fast.join(' + '):'쉐어');
