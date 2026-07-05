@@ -163,8 +163,7 @@ function badges(){
     }
     if(s.main==='bomb'){
       var bs=anySight?'fast':'slow'; // 마안 있으면 1물번개때, 없으면 2물번개때
-      var bReal=(bs==='fast')?st[1].real:st[2].real; // 가속도 = '슬롯'의 찐짭 기준 (2·3판 실전 검증)
-      if(bReal) slot[bs].push(bReal==='t'?'멈춰':'움직여!');
+      slot[bs].push(real?'멈춰':'움직여!'); // 가속도도 '준 그크'의 찐짭 기준
     }
   });
   cell(2, slot.fast.length?slot.fast.join(' + '):'쉐어');
