@@ -162,8 +162,9 @@ function badges(){
       }
     }
     if(s.main==='bomb'){
-      var bs=anySight?'fast':'slow'; // 마안 있으면 1물번개때, 없으면 2물번개때
-      slot[bs].push(real?'멈춰':'움직여!'); // 가속도도 '준 그크'의 찐짭 기준
+      // 배치: ②發 가속도=1물번개때(실전 확인), ①發=마안 동반이면 1물번개때·아니면 2물번개때
+      var bs=(t===2)?'fast':(anySight?'fast':'slow');
+      slot[bs].push(real?'멈춰':'움직여!'); // 판정은 '부여받은 순간의 찐짭'
     }
   });
   cell(2, slot.fast.length?slot.fast.join(' + '):'쉐어');
