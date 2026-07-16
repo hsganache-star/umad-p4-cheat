@@ -148,7 +148,6 @@ function mainConflict(o,k){ if(!o)return false; if(WL.indexOf(o)>=0&&WL.indexOf(
 function badges(){
   function cell(i,html){var c=$('my'+i);c.innerHTML=html||'ㅡ';c.classList.toggle('on',!!html);}
   var slot={fast:[],slow:[]};
-  var anySight=st[1].sight||st[2].sight;
   [1,2].forEach(function(t){
     var s=st[t]; if(!s.real)return;
     var real=(s.real==='t');
@@ -162,9 +161,9 @@ function badges(){
       }
     }
     if(s.main==='bomb'){
-      // 배치: ②發 가속도=1물번개때(실전 확인), ①發=마안 동반이면 1물번개때·아니면 2물번개때
-      var bs=(t===2)?'fast':(anySight?'fast':'slow');
-      slot[bs].push(real?'멈춰':'움직여!'); // 판정은 '부여받은 순간의 찐짭'
+      // 배치도 타이머 기준 (짧으면 1물번개때, 길면 2물번개때) — 판정은 '부여받은 순간의 찐짭'
+      var bs=(s.timer==='under')?'fast':(s.timer==='over')?'slow':null;
+      if(bs) slot[bs].push(real?'멈춰':'움직여!');
     }
   });
   cell(2, slot.fast.length?slot.fast.join(' + '):'쉐어');
@@ -191,7 +190,7 @@ function render(){
     var sb=$(t+'_sight');
     sb.classList.toggle('on',s.sight);
     sb.classList.toggle('lock',o.sight&&!s.sight);
-    $('timer'+t).style.display=(s.main==='water'||s.main==='lightning')?'':'none';
+    $('timer'+t).style.display=s.main?'':'none'; // 물/번개/가속도 모두 타이머 필요
     $(t+'-under').classList.toggle('on',s.timer==='under');
     $(t+'-over').classList.toggle('on',s.timer==='over');
   });
@@ -276,10 +275,10 @@ function validate(){
   var m=[];
   if(!st[1].real)m.push('그크① 찐/짭');
   if(!st[1].main&&!st[1].sight)m.push('그크① 내 디버프');
-  if((st[1].main==='water'||st[1].main==='lightning')&&!st[1].timer)m.push('그크① 타이머');
+  if(st[1].main&&!st[1].timer)m.push('그크① 타이머');
   if(!st[2].real)m.push('그크② 찐/짭');
   if(!st[2].main&&!st[2].sight)m.push('그크② 내 디버프');
-  if((st[2].main==='water'||st[2].main==='lightning')&&!st[2].timer)m.push('그크② 타이머');
+  if(st[2].main&&!st[2].timer)m.push('그크② 타이머');
   return m;
 }
 function flashBtn(b,msg){
